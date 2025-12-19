@@ -1,5 +1,9 @@
 package models
 
+import (
+	"github.com/gofrs/uuid"
+)
+
 type Alert struct {
 	Id                *uuid.UUID `json:"id"`
 	Destinataire      string     `json:"destinataire"`

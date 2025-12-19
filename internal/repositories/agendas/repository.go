@@ -4,9 +4,11 @@ import (
 	"middleware/example/internal/helpers"
 	"middleware/example/internal/models"
 	"time"
+
+	"github.com/gofrs/uuid"
 )
 
-func GetAllEvents() ([]models.Event, error) {
+func GetAllAgendas() ([]models.Agenda, error) {
 	db, err := helpers.OpenDB()
 	if err != nil {
 		return nil, err
@@ -15,51 +17,35 @@ func GetAllEvents() ([]models.Event, error) {
 
 	rows, err := db.Query(`SELECT 
 		id, 
-		dtStamp, 
-		dtStart, 
-		dtEnd, 
-		summary, 
-		location, 
-		description, 
-		uid, 
-		created, 
-		lastModified, 
-		sequence 
-		FROM Event`)
+		groupId, 
+		calendarID, 
+		createdAt, 
+		updatedAt`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	events := []models.Event{}
+	events := []models.Agenda{}
 
 	for rows.Next() {
-		var e models.Event
-		var dtStampStr, dtStartStr, dtEndStr, createdStr, lastModifiedStr string
+		var e models.Agenda
+		var createdAt, updatedAt string
 
 		err = rows.Scan(
 			&e.Id,
-			&dtStampStr,
-			&dtStartStr,
-			&dtEndStr,
-			&e.Summary,
-			&e.Location,
-			&e.Description,
-			&e.Uid,
-			&createdStr,
-			&lastModifiedStr,
-			&e.Sequence,
+			&e.GroupID,
+			&e.CalendarID,
+			&createdAt,
+			&updatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
 
 		// Parsing des dates
-		e.DtStamp, _ = time.Parse("20060102T150405Z", dtStampStr)
-		e.DtStart, _ = time.Parse("20060102T150405Z", dtStartStr)
-		e.DtEnd, _ = time.Parse("20060102T150405Z", dtEndStr)
-		e.Created, _ = time.Parse("20060102T150405Z", createdStr)
-		e.LastModified, _ = time.Parse("20060102T150405Z", lastModifiedStr)
+		e.CreatedAt, _ = time.Parse("20060102T150405Z", createdAt)
+		e.UpdatedAt, _ = time.Parse("20060102T150405Z", updatedAt)
 
 		events = append(events, e)
 	}
@@ -69,4 +55,20 @@ func GetAllEvents() ([]models.Event, error) {
 	}
 
 	return events, nil
+}
+
+func GetAgendaById(id uuid.UUID) (*models.Agenda, error) {
+	db, err := helpers.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	row := db.QueryRow("SELECT * FROM agenda WHERE id=?", id.String())
+	helpers.CloseDB(db)
+
+	var agenda models.Agenda
+	err = row.Scan(&agenda.Id, &agenda.GroupID)
+	if err != nil {
+		return nil, err
+	}
+	return &agenda, err
 }
