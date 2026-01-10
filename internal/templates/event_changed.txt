@@ -1,0 +1,16 @@
+---
+subject: EDU Middleware - évènement modifié
+---
+Bonjour,
+
+L'évènement "{{ .EventName }}" a été modifié.
+
+Voici le détail des changements :
+- Ancienne date : {{ .OldDate }}
+- Nouvelle date : {{ .NewDate }}
+- Nouvelle salle : {{ .Room }}
+
+Merci de prendre en compte ces modifications.
+
+Cordialement,
+EDU Middleware
