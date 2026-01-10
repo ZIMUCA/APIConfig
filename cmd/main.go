@@ -1,7 +1,10 @@
 package main
 
 import (
+	"middleware/example/internal/controllers"
 	"middleware/example/internal/controllers/agenda"
+	"middleware/example/internal/controllers/alerts"
+
 	"middleware/example/internal/helpers"
 	"net/http"
 
@@ -17,10 +20,18 @@ func main() {
 		r.Get("/", agenda.GetAgendas)         // GET /agendas
 		r.Post("/", agenda.PostAgenda)        // POST /agendas
 		r.Route("/{id}", func(r chi.Router) { // route /agendas/{id}
-			r.Use(agenda.Context)              // Use Context method to get agenda ID
+			r.Use(controllers.Context)         // Use Context method to get agenda ID
 			r.Get("/", agenda.GetAgenda)       // GET /agendas/{id}
 			r.Delete("/", agenda.DeleteAgenda) // DELETE /agendas/{id}
-			r.Put("/", agenda.UpdateAgenda)    //PUT /agendas/{id}
+		})
+	})
+
+	r.Route("/alerts", func(r chi.Router) { // route /alerts
+		r.Get("/", alerts.GetAlerts)          // GET /alerts
+		r.Post("/", agenda.PostAgenda)        // POST /alerts
+		r.Route("/{id}", func(r chi.Router) { // route /alerts/{id}
+			r.Use(controllers.Context)      // Use Context method to get alert ID
+			r.Put("/", agenda.UpdateAgenda) //PUT /alerts/{id}
 		})
 	})
 
@@ -40,12 +51,17 @@ func init() {
 			id TEXT PRIMARY KEY NOT NULL UNIQUE,
 			agenda_id INTEGER,
 			name TEXT
+		);
+		CREATE TABLE IF NOT EXISTS alert (
+			id TEXT PRIMARY KEY NOT NULL UNIQUE,
+			agenda_id INTEGER,
+			mail TEXT
 		);`,
 	}
 
 	for _, scheme := range schemes {
 		if _, err := db.Exec(scheme); err != nil {
-			logrus.Fatalln("Could not generate table! Error was: " + err.Error())
+			logrus.Fatalln("Could not generate table agenda! Error was: " + err.Error())
 		}
 	}
 

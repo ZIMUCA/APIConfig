@@ -9,3 +9,9 @@ type Agenda struct {
 	AgendaId string     `json:"agenda_id"`
 	Name     string     `json:"name"`
 }
+
+type Alerts struct {
+	Id       *uuid.UUID `json:"id"`
+	AgendaId string     `json:"agenda_id"`
+	Mail     string     `json:"mail"`
+}
