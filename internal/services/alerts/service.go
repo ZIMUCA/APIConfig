@@ -5,6 +5,7 @@ import (
 	"middleware/example/internal/models"
 	repository "middleware/example/internal/repositories/alerts"
 
+	"github.com/gofrs/uuid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -30,6 +31,19 @@ func CreateAlerts(newAlert *models.Alerts) (*models.Alerts, error) {
 		if err.Error() == sql.ErrNoRows.Error() {
 			return nil, &models.ErrorNotFound{
 				Message: "Error in the creation",
+			}
+		}
+	}
+
+	return alert, err
+}
+
+func UpdateAgenda(id uuid.UUID, updatedAlert *models.Alerts) (*models.Alerts, error) {
+	alert, err := repository.PutAlertById(id, updatedAlert)
+	if err != nil {
+		if err.Error() == sql.ErrNoRows.Error() {
+			return nil, &models.ErrorNotFound{
+				Message: "Error in the update of the alert",
 			}
 		}
 	}

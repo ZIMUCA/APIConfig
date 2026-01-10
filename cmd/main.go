@@ -28,10 +28,10 @@ func main() {
 
 	r.Route("/alerts", func(r chi.Router) { // route /alerts
 		r.Get("/", alerts.GetAlerts)          // GET /alerts
-		r.Post("/", agenda.PostAgenda)        // POST /alerts
+		r.Post("/", alerts.PostAlert)         // POST /alerts
 		r.Route("/{id}", func(r chi.Router) { // route /alerts/{id}
-			r.Use(controllers.Context)      // Use Context method to get alert ID
-			r.Put("/", agenda.UpdateAgenda) //PUT /alerts/{id}
+			r.Use(controllers.Context)     // Use Context method to get alert ID
+			r.Put("/", alerts.UpdateAlert) //PUT /alerts/{id}
 		})
 	})
 
