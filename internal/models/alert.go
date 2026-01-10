@@ -1,12 +1,9 @@
 package models
 
-import (
-	"github.com/gofrs/uuid"
-)
+import "time"
 
 type Alert struct {
-	Id                *uuid.UUID `json:"id"`
-	Destinataire      string     `json:"destinataire"`
-	AgendaAssocie     Agenda     `json:"agenda_associe"`
-	QuandEnvoyeAlerte string     `json:"quand_envoye_alerte"`
+	UID           string    `json:"uid"`
+	ChangedFields []string  `json:"changed_fields"`
+	DetectedAt    time.Time `json:"detected_at"`
 }

@@ -1,9 +1,11 @@
 package main
 
 import (
+	"net/http"
+
+	consumers "middleware/example/internal/consumers"
 	"middleware/example/internal/controllers/agenda"
 	"middleware/example/internal/helpers"
-	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
@@ -11,22 +13,40 @@ import (
 
 func main() {
 
+	// Connexion NATS
+	if err := helpers.ConnectNats(); err != nil {
+		logrus.Fatalf("error while connecting to NATS: %v", err)
+	}
+	defer helpers.CloseNats()
+
+	// Lancement du consumer Alerter
+	go func() {
+		consumer, err := consumers.AlerterConsumer()
+		if err != nil {
+			logrus.Fatalf("error creating alerter consumer: %v", err)
+		}
+
+		if err := consumers.ConsumeAlerter(*consumer); err != nil {
+			logrus.Fatalf("error consuming alerts: %v", err)
+		}
+	}()
+
+	// API REST (Config)
 	r := chi.NewRouter()
 
-	r.Route("/agendas", func(r chi.Router) { // route /agendas
-		r.Get("/", agenda.GetAgendas)         // GET /agendas
-		r.Post("/", agenda.PostAgenda)        // POST /agendas
-		r.Route("/{id}", func(r chi.Router) { // route /agendas/{id}
-			r.Use(agenda.Context)              // Use Context method to get agenda ID
-			r.Get("/", agenda.GetAgenda)       // GET /agendas/{id}
-			r.Delete("/", agenda.DeleteAgenda) // DELETE /agendas/{id}
-			r.Put("/", agenda.UpdateAgenda)    //PUT /agendas/{id}
+	r.Route("/agendas", func(r chi.Router) {
+		r.Get("/", agenda.GetAgendas)
+		r.Post("/", agenda.PostAgenda)
+		r.Route("/{id}", func(r chi.Router) {
+			r.Use(agenda.Context)
+			r.Get("/", agenda.GetAgenda)
+			r.Delete("/", agenda.DeleteAgenda)
+			r.Put("/", agenda.UpdateAgenda)
 		})
 	})
 
 	logrus.Info("[INFO] Web server started. Now listening on *:8080")
 	logrus.Fatalln(http.ListenAndServe(":8080", r))
-
 }
 
 func init() {
@@ -41,6 +61,7 @@ func init() {
 			agenda_id INTEGER,
 			name TEXT
 		);`,
+		
 	}
 
 	for _, scheme := range schemes {
