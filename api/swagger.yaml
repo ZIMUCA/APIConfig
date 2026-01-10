@@ -8,6 +8,15 @@ definitions:
       name:
         type: string
     type: object
+  models.Alerts:
+    properties:
+      agenda_id:
+        type: string
+      id:
+        type: string
+      mail:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -118,4 +127,74 @@ paths:
       summary: Update an genda.
       tags:
       - agendas
+  /alert:
+    post:
+      consumes:
+      - application/json
+      description: Create a new alert.
+      parameters:
+      - description: Alert data
+        in: body
+        name: alert
+        required: true
+        schema:
+          $ref: '#/definitions/models.Alerts'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Alerts'
+        "400":
+          description: Invalid request body
+        "500":
+          description: Something went wrong
+      summary: Create an alert.
+      tags:
+      - alerts
+  /alerts:
+    get:
+      description: Get all alerts.
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Alerts'
+            type: array
+        "500":
+          description: Something went wrong
+      summary: Get all alerts.
+      tags:
+      - alerts
+  /alerts/{id}:
+    put:
+      description: Update an alert by UUID.
+      parameters:
+      - description: Alert UUID formatted ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated alert data
+        in: body
+        name: alert
+        required: true
+        schema:
+          $ref: '#/definitions/models.Alerts'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Alerts'
+        "400":
+          description: Invalid request body
+        "422":
+          description: Cannot parse id
+        "500":
+          description: Something went wrong
+      summary: Update an alert.
+      tags:
+      - alerts
 swagger: "2.0"

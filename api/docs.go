@@ -176,6 +176,113 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/alert": {
+            "post": {
+                "description": "Create a new alert.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "alerts"
+                ],
+                "summary": "Create an alert.",
+                "parameters": [
+                    {
+                        "description": "Alert data",
+                        "name": "alert",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Alerts"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Alerts"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/alerts": {
+            "get": {
+                "description": "Get all alerts.",
+                "tags": [
+                    "alerts"
+                ],
+                "summary": "Get all alerts.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Alerts"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/alerts/{id}": {
+            "put": {
+                "description": "Update an alert by UUID.",
+                "tags": [
+                    "alerts"
+                ],
+                "summary": "Update an alert.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Alert UUID formatted ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated alert data",
+                        "name": "alert",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Alerts"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Alerts"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body"
+                    },
+                    "422": {
+                        "description": "Cannot parse id"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -189,6 +296,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Alerts": {
+            "type": "object",
+            "properties": {
+                "agenda_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mail": {
                     "type": "string"
                 }
             }
