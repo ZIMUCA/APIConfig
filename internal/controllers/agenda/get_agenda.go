@@ -9,15 +9,15 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-// GetUser
-// @Tags         users
-// @Summary      Get a user.
-// @Description  Get a user.
-// @Param        id           	path      string  true  "User UUID formatted ID"
-// @Success      200            {object}  models.User
+// GetAgenda
+// @Tags         agendas
+// @Summary      Get a agenda.
+// @Description  Get a agenda.
+// @Param        id           	path      string  true  "Agenda UUID formatted ID"
+// @Success      200            {object}  models.Agenda
 // @Failure      422            "Cannot parse id"
 // @Failure      500            "Something went wrong"
-// @Router       /users/{id} [get]
+// @Router       /agendas/{id} [get]
 func GetAgenda(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

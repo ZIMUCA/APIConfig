@@ -14,8 +14,8 @@ import (
 // Context
 /* This method is used to get ressource ID from url
 *
-* In REST, urls are formed like this : users/{specific_collection_ressource_id}/another_collection/{another_collection_ressource_id}...
-* In this example, it could be users/{user_id} to get specific user infos or users/{user_id}/animals/{animal_id} to get specific user's specific animal
+* In REST, urls are formed like this : agendas/{specific_collection_ressource_id}/another_collection/{another_collection_ressource_id}...
+* In this example, it could be agendas/{agenda_id} to get specific agenda infos or agendas/{agenda_id}/animals/{animal_id} to get specific agenda's specific animal
  */
 func Context(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

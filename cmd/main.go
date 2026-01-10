@@ -17,9 +17,10 @@ func main() {
 		r.Get("/", agenda.GetAgendas) // GET /agendas
 		r.Post("/", agenda.PostAgenda)
 		r.Route("/{id}", func(r chi.Router) { // route /agendas/{id}
-			r.Use(agenda.Context)        // Use Context method to get user ID
+			r.Use(agenda.Context)        // Use Context method to get agenda ID
 			r.Get("/", agenda.GetAgenda) // GET /agendas/{id}
 			r.Delete("/", agenda.DeleteAgenda)
+			r.Put("/", agenda.UpdateAgenda)
 		})
 	})
 

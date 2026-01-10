@@ -93,21 +93,21 @@ func PostAgenda(newAgenda *models.Agenda) (*models.Agenda, error) {
 	return nil, nil
 }
 
-func PutAgendaById(updatedAgenda *models.Agenda) (*models.Agenda, error) {
-	return nil, nil
-	/*db, err := helpers.OpenDB()
-		if err != nil {
-			return nil, err
-		}
-		_, err = db.Exec("UPDATE agenda SET groupId = ?, calendarId = ?, createdAt = ?, updatedAt WHERE id = ?",
-	    updatedAgenda.GroupID.String(),
-	    updatedAgenda.Title,
-	    updatedAgenda.Date,
-	    updatedAgenda.Id.String(),
+func PutAgendaById(id uuid.UUID, updatedAgenda *models.Agenda) (*models.Agenda, error) {
+	db, err := helpers.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	_, err = db.Exec("UPDATE agenda SET group_id = ?, calendar_id = ?, created_at = ?, updated_at = ? WHERE id = ?",
+		updatedAgenda.GroupID,
+		updatedAgenda.CalendarID,
+		updatedAgenda.CreatedAt,
+		updatedAgenda.UpdatedAt,
+		updatedAgenda.Id.String(),
 	)
-		helpers.CloseDB(db)
+	helpers.CloseDB(db)
 
-		return nil, err*/
+	return nil, err
 }
 
 func DeleteAgendaById(id uuid.UUID) error {

@@ -26,20 +26,20 @@ func GetAllAgendas() ([]models.Agenda, error) {
 }
 
 func GetAgendaById(id uuid.UUID) (*models.Agenda, error) {
-	user, err := repository.GetAgendaById(id)
+	agenda, err := repository.GetAgendaById(id)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
 			return nil, &models.ErrorNotFound{
 				Message: "agenda not found",
 			}
 		}
-		logrus.Errorf("error retrieving user %s : %s", id.String(), err.Error())
+		logrus.Errorf("error retrieving agenda %s : %s", id.String(), err.Error())
 		return nil, &models.ErrorGeneric{
 			Message: fmt.Sprintf("Something went wrong while retrieving agenda %s", id.String()),
 		}
 	}
 
-	return user, err
+	return agenda, err
 }
 
 func DeleteAgenda(id uuid.UUID) error {
@@ -62,6 +62,6 @@ func CreateAgenda(newAgenda *models.Agenda) (*models.Agenda, error) {
 }
 
 func UpdateAgenda(id uuid.UUID, updatedAgenda *models.Agenda) (*models.Agenda, error) {
-	agenda, err := repository.PutAgendaById(updatedAgenda)
+	agenda, err := repository.PutAgendaById(id, updatedAgenda)
 	return agenda, err
 }
