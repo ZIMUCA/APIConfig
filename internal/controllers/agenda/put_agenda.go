@@ -16,8 +16,8 @@ import (
 // @Summary      Update an genda.
 // @Description  Update an agenda by UUID.
 // @Param        id    path      string      true  "Agenda UUID formatted ID"
-// @Param        agenda  body      agendas.Agenda  true  "Updated agenda data"
-// @Success      200   {object}  agendas.Agenda
+// @Param        agenda  body      models.Agenda  true  "Updated agenda data"
+// @Success      200   {object}  models.Agenda
 // @Failure      400   "Invalid request body"
 // @Failure      422   "Cannot parse id"
 // @Failure      500   "Something went wrong"

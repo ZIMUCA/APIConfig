@@ -1,0 +1,192 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/agendas": {
+            "get": {
+                "description": "Get all agendas.",
+                "tags": [
+                    "agendas"
+                ],
+                "summary": "Get all agendas.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Agenda"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new agenda.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "agendas"
+                ],
+                "summary": "Create a agenda.",
+                "parameters": [
+                    {
+                        "description": "Agenda data",
+                        "name": "agenda",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Agenda"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Agenda"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/agendas/{id}": {
+            "get": {
+                "description": "Get a agenda.",
+                "tags": [
+                    "agendas"
+                ],
+                "summary": "Get a agenda.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Agenda UUID formatted ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Agenda"
+                        }
+                    },
+                    "422": {
+                        "description": "Cannot parse id"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an agenda by UUID.",
+                "tags": [
+                    "agendas"
+                ],
+                "summary": "Update an genda.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Agenda UUID formatted ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated agenda data",
+                        "name": "agenda",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Agenda"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Agenda"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body"
+                    },
+                    "422": {
+                        "description": "Cannot parse id"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete an agenda by UUID.",
+                "tags": [
+                    "agendas"
+                ],
+                "summary": "Delete an agenda.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Agenda UUID formatted ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "422": {
+                        "description": "Cannot parse id"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Agenda": {
+            "type": "object",
+            "properties": {
+                "calendar_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

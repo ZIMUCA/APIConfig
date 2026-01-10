@@ -62,8 +62,6 @@ func GetAgendaById(id uuid.UUID) (*models.Agenda, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Println(id.String())
-	log.Println(id)
 
 	row := db.QueryRow("SELECT id, group_id, calendar_id, created_at, updated_at FROM agenda WHERE id=?", id.String())
 	helpers.CloseDB(db)
@@ -90,7 +88,7 @@ func PostAgenda(newAgenda *models.Agenda) (*models.Agenda, error) {
 		log.Println("DB QUERY ERROR:", err)
 		return nil, err
 	}
-	return nil, nil
+	return newAgenda, nil
 }
 
 func PutAgendaById(id uuid.UUID, updatedAgenda *models.Agenda) (*models.Agenda, error) {
@@ -107,7 +105,7 @@ func PutAgendaById(id uuid.UUID, updatedAgenda *models.Agenda) (*models.Agenda, 
 	)
 	helpers.CloseDB(db)
 
-	return nil, err
+	return updatedAgenda, err
 }
 
 func DeleteAgendaById(id uuid.UUID) error {

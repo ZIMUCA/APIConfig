@@ -15,7 +15,6 @@ import (
 // @Failure      500             "Something went wrong"
 // @Router       /agendas [get]
 func GetAgendas(w http.ResponseWriter, _ *http.Request) {
-	// calling service
 	agendas, err := agenda.GetAllAgendas()
 	if err != nil {
 		body, status := helpers.RespondError(err)

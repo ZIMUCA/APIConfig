@@ -1,0 +1,125 @@
+definitions:
+  models.Agenda:
+    properties:
+      calendar_id:
+        type: string
+      created_at:
+        type: string
+      group_id:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /agendas:
+    get:
+      description: Get all agendas.
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Agenda'
+            type: array
+        "500":
+          description: Something went wrong
+      summary: Get all agendas.
+      tags:
+      - agendas
+    post:
+      consumes:
+      - application/json
+      description: Create a new agenda.
+      parameters:
+      - description: Agenda data
+        in: body
+        name: agenda
+        required: true
+        schema:
+          $ref: '#/definitions/models.Agenda'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Agenda'
+        "400":
+          description: Invalid request body
+        "500":
+          description: Something went wrong
+      summary: Create a agenda.
+      tags:
+      - agendas
+  /agendas/{id}:
+    delete:
+      description: Delete an agenda by UUID.
+      parameters:
+      - description: Agenda UUID formatted ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No content
+        "422":
+          description: Cannot parse id
+        "500":
+          description: Something went wrong
+      summary: Delete an agenda.
+      tags:
+      - agendas
+    get:
+      description: Get a agenda.
+      parameters:
+      - description: Agenda UUID formatted ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Agenda'
+        "422":
+          description: Cannot parse id
+        "500":
+          description: Something went wrong
+      summary: Get a agenda.
+      tags:
+      - agendas
+    put:
+      description: Update an agenda by UUID.
+      parameters:
+      - description: Agenda UUID formatted ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated agenda data
+        in: body
+        name: agenda
+        required: true
+        schema:
+          $ref: '#/definitions/models.Agenda'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Agenda'
+        "400":
+          description: Invalid request body
+        "422":
+          description: Cannot parse id
+        "500":
+          description: Something went wrong
+      summary: Update an genda.
+      tags:
+      - agendas
+swagger: "2.0"

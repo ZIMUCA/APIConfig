@@ -44,16 +44,24 @@ func GetAgendaById(id uuid.UUID) (*models.Agenda, error) {
 
 func DeleteAgenda(id uuid.UUID) error {
 	err := repository.DeleteAgendaById(id)
+	if err != nil {
+		if err.Error() == sql.ErrNoRows.Error() {
+			return &models.ErrorNotFound{
+				Message: "Error in the supression",
+			}
+		}
+	}
+
 	return err
 }
 
 func CreateAgenda(newAgenda *models.Agenda) (*models.Agenda, error) {
-
 	agenda, err := repository.PostAgenda(newAgenda)
+
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
 			return nil, &models.ErrorNotFound{
-				Message: "creation impossible",
+				Message: "Error in the creation",
 			}
 		}
 	}
@@ -63,5 +71,13 @@ func CreateAgenda(newAgenda *models.Agenda) (*models.Agenda, error) {
 
 func UpdateAgenda(id uuid.UUID, updatedAgenda *models.Agenda) (*models.Agenda, error) {
 	agenda, err := repository.PutAgendaById(id, updatedAgenda)
+	if err != nil {
+		if err.Error() == sql.ErrNoRows.Error() {
+			return nil, &models.ErrorNotFound{
+				Message: "Error in the update",
+			}
+		}
+	}
+
 	return agenda, err
 }

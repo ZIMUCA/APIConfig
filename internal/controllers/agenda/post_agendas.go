@@ -8,14 +8,14 @@ import (
 	"net/http"
 )
 
-// CreateUser
+// CreateAgenda
 // @Tags         agendas
 // @Summary      Create a agenda.
 // @Description  Create a new agenda.
 // @Accept       json
 // @Produce      json
-// @Param        agenda      body      agendas.Agenda  true  "User data"
-// @Success      201       {object}  agendas.Agenda
+// @Param        agenda      body      models.Agenda  true  "Agenda data"
+// @Success      201       {object}  models.Agenda
 // @Failure      400       "Invalid request body"
 // @Failure      500       "Something went wrong"
 // @Router       /agendas [post]
