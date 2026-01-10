@@ -4,7 +4,6 @@ import (
 	"log"
 	"middleware/example/internal/helpers"
 	"middleware/example/internal/models"
-	"time"
 
 	"github.com/gofrs/uuid"
 )
@@ -17,7 +16,7 @@ func GetAllAgendas() ([]models.Agenda, error) {
 	}
 	defer helpers.CloseDB(db)
 
-	rows, err := db.Query(`SELECT id, group_id, calendar_id,created_at,updated_at FROM agenda`)
+	rows, err := db.Query(`SELECT id, agenda_id,name FROM agenda`)
 
 	if err != nil {
 		return nil, err
@@ -28,24 +27,16 @@ func GetAllAgendas() ([]models.Agenda, error) {
 
 	for rows.Next() {
 		var e models.Agenda
-		var createdAt, updatedAt, idStr string
 
 		err = rows.Scan(
 			&e.Id,
-			&e.GroupID,
-			&e.CalendarID,
-			&createdAt,
-			&updatedAt,
+			&e.AgendaId,
+			&e.Name,
 		)
-
-		log.Println(idStr)
 
 		if err != nil {
 			return nil, err
 		}
-
-		e.CreatedAt, _ = time.Parse("20060102T150405Z", createdAt)
-		e.UpdatedAt, _ = time.Parse("20060102T150405Z", updatedAt)
 
 		events = append(events, e)
 	}
@@ -63,11 +54,11 @@ func GetAgendaById(id uuid.UUID) (*models.Agenda, error) {
 		return nil, err
 	}
 
-	row := db.QueryRow("SELECT id, group_id, calendar_id, created_at, updated_at FROM agenda WHERE id=?", id.String())
+	row := db.QueryRow("SELECT id, agenda_id, name FROM agenda WHERE id=?", id.String())
 	helpers.CloseDB(db)
 
 	var agenda models.Agenda
-	err = row.Scan(&agenda.Id, &agenda.GroupID, &agenda.CalendarID, &agenda.CreatedAt, &agenda.UpdatedAt)
+	err = row.Scan(&agenda.Id, &agenda.AgendaId, &agenda.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -80,8 +71,8 @@ func PostAgenda(newAgenda *models.Agenda) (*models.Agenda, error) {
 		return nil, err
 	}
 
-	_, err = db.Exec("INSERT INTO agenda (id, group_id,calendar_id,created_at,updated_at) VALUES (?, ?,?,?,?)",
-		newAgenda.Id.String(), newAgenda.GroupID, newAgenda.CalendarID, newAgenda.CreatedAt, newAgenda.UpdatedAt)
+	_, err = db.Exec("INSERT INTO agenda (id, agenda_id,name) VALUES (?, ?,?)",
+		newAgenda.Id.String(), newAgenda.AgendaId, newAgenda.Name)
 	helpers.CloseDB(db)
 
 	if err != nil {
@@ -96,11 +87,9 @@ func PutAgendaById(id uuid.UUID, updatedAgenda *models.Agenda) (*models.Agenda, 
 	if err != nil {
 		return nil, err
 	}
-	_, err = db.Exec("UPDATE agenda SET group_id = ?, calendar_id = ?, created_at = ?, updated_at = ? WHERE id = ?",
-		updatedAgenda.GroupID,
-		updatedAgenda.CalendarID,
-		updatedAgenda.CreatedAt,
-		updatedAgenda.UpdatedAt,
+	_, err = db.Exec("UPDATE agenda SET agenda_id = ?, name = ? WHERE id = ?",
+		updatedAgenda.AgendaId,
+		updatedAgenda.Name,
 		updatedAgenda.Id.String(),
 	)
 	helpers.CloseDB(db)

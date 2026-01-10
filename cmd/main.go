@@ -38,10 +38,8 @@ func init() {
 	schemes := []string{
 		`CREATE TABLE IF NOT EXISTS agenda (
 			id TEXT PRIMARY KEY NOT NULL UNIQUE,
-			group_id TEXT,
-			calendar_id TEXT,
-			created_at DATETIME,
-			updated_at DATETIME
+			agenda_id INTEGER,
+			name TEXT
 		);`,
 	}
 
