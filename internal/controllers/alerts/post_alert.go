@@ -1,28 +1,28 @@
-package agenda
+package alerts
 
 import (
 	"encoding/json"
 	"middleware/example/internal/helpers"
 	"middleware/example/internal/models"
-	agenda "middleware/example/internal/services/agendas"
+	alert "middleware/example/internal/services/alerts"
 	"net/http"
 )
 
-// CreateAgenda
-// @Tags         agendas
-// @Summary      Create a agenda.
-// @Description  Create a new agenda.
+// CreateAlerts
+// @Tags         alerts
+// @Summary      Create an alert.
+// @Description  Create a new alert.
 // @Accept       json
 // @Produce      json
-// @Param        agenda      body      models.Agenda  true  "Agenda data"
-// @Success      201       {object}  models.Agenda
+// @Param        alert      body      models.Alerts  true  "Alert data"
+// @Success      201       {object}  models.Alerts
 // @Failure      400       "Invalid request body"
 // @Failure      500       "Something went wrong"
-// @Router       /agendas [post]
-func PostAgenda(w http.ResponseWriter, r *http.Request) {
+// @Router       /alert [post]
+func PostAlert(w http.ResponseWriter, r *http.Request) {
 
-	var newAgenda models.Agenda
-	if err := json.NewDecoder(r.Body).Decode(&newAgenda); err != nil {
+	var newAlert models.Alerts
+	if err := json.NewDecoder(r.Body).Decode(&newAlert); err != nil {
 		body, status := helpers.RespondError(err)
 		w.WriteHeader(status)
 		if body != nil {
@@ -31,7 +31,7 @@ func PostAgenda(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdAgenda, err := agenda.CreateAgenda(&newAgenda)
+	createdAlert, err := alert.CreateAlerts(&newAlert)
 	if err != nil {
 		body, status := helpers.RespondError(err)
 		w.WriteHeader(status)
@@ -42,6 +42,6 @@ func PostAgenda(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	body, _ := json.Marshal(createdAgenda)
+	body, _ := json.Marshal(createdAlert)
 	_, _ = w.Write(body)
 }

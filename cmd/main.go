@@ -2,9 +2,11 @@ package main
 
 import (
 	"net/http"
-
 	consumers "middleware/example/internal/consumers"
+	"middleware/example/internal/controllers"
 	"middleware/example/internal/controllers/agenda"
+	"middleware/example/internal/controllers/alerts"
+
 	"middleware/example/internal/helpers"
 
 	"github.com/go-chi/chi/v5"
@@ -34,19 +36,28 @@ func main() {
 	// API REST (Config)
 	r := chi.NewRouter()
 
-	r.Route("/agendas", func(r chi.Router) {
-		r.Get("/", agenda.GetAgendas)
-		r.Post("/", agenda.PostAgenda)
-		r.Route("/{id}", func(r chi.Router) {
-			r.Use(agenda.Context)
-			r.Get("/", agenda.GetAgenda)
-			r.Delete("/", agenda.DeleteAgenda)
-			r.Put("/", agenda.UpdateAgenda)
+	r.Route("/agendas", func(r chi.Router) { // route /agendas
+		r.Get("/", agenda.GetAgendas)         // GET /agendas
+		r.Post("/", agenda.PostAgenda)        // POST /agendas
+		r.Route("/{id}", func(r chi.Router) { // route /agendas/{id}
+			r.Use(controllers.Context)         // Use Context method to get agenda ID
+			r.Get("/", agenda.GetAgenda)       // GET /agendas/{id}
+			r.Delete("/", agenda.DeleteAgenda) // DELETE /agendas/{id}
 		})
 	})
 
-	logrus.Info("[INFO] Web server started. Now listening on *:8080")
-	logrus.Fatalln(http.ListenAndServe(":8080", r))
+	r.Route("/alerts", func(r chi.Router) { // route /alerts
+		r.Get("/", alerts.GetAlerts)          // GET /alerts
+		r.Post("/", alerts.PostAlert)         // POST /alerts
+		r.Route("/{id}", func(r chi.Router) { // route /alerts/{id}
+			r.Use(controllers.Context)     // Use Context method to get alert ID
+			r.Put("/", alerts.UpdateAlert) //PUT /alerts/{id}
+		})
+	})
+
+	logrus.Info("[INFO] Web server started. Now listening on *:8081")
+	logrus.Fatalln(http.ListenAndServe(":8081", r))
+
 }
 
 func init() {
@@ -60,13 +71,18 @@ func init() {
 			id TEXT PRIMARY KEY NOT NULL UNIQUE,
 			agenda_id INTEGER,
 			name TEXT
+		);
+		CREATE TABLE IF NOT EXISTS alert (
+			id TEXT PRIMARY KEY NOT NULL UNIQUE,
+			agenda_id INTEGER,
+			mail TEXT
 		);`,
 		
 	}
 
 	for _, scheme := range schemes {
 		if _, err := db.Exec(scheme); err != nil {
-			logrus.Fatalln("Could not generate table! Error was: " + err.Error())
+			logrus.Fatalln("Could not generate table agenda! Error was: " + err.Error())
 		}
 	}
 
