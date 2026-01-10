@@ -182,19 +182,13 @@ const docTemplate = `{
         "models.Agenda": {
             "type": "object",
             "properties": {
-                "calendar_id": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "group_id": {
+                "agenda_id": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "updated_at": {
+                "name": {
                     "type": "string"
                 }
             }

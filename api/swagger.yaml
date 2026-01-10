@@ -1,15 +1,11 @@
 definitions:
   models.Agenda:
     properties:
-      calendar_id:
-        type: string
-      created_at:
-        type: string
-      group_id:
+      agenda_id:
         type: string
       id:
         type: string
-      updated_at:
+      name:
         type: string
     type: object
 info:
