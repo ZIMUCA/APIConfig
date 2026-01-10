@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"log"
 	"middleware/example/internal/helpers"
 	"middleware/example/internal/models"
 	"time"
@@ -9,6 +10,7 @@ import (
 )
 
 func GetAllAgendas() ([]models.Agenda, error) {
+
 	db, err := helpers.OpenDB()
 	if err != nil {
 		return nil, err
@@ -16,11 +18,12 @@ func GetAllAgendas() ([]models.Agenda, error) {
 	defer helpers.CloseDB(db)
 
 	rows, err := db.Query(`SELECT 
-		id, 
-		groupId, 
-		calendarID, 
-		createdAt, 
-		updatedAt`)
+		Id, 
+		group_id, 
+		calendar_id, 
+		created_at, 
+		updated_at FROM AGENDA`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +33,7 @@ func GetAllAgendas() ([]models.Agenda, error) {
 
 	for rows.Next() {
 		var e models.Agenda
-		var createdAt, updatedAt string
+		var createdAt, updatedAt, idStr string
 
 		err = rows.Scan(
 			&e.Id,
@@ -42,6 +45,12 @@ func GetAllAgendas() ([]models.Agenda, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		parsedID, err := uuid.FromString(idStr)
+		if err != nil {
+			return nil, err
+		}
+		e.Id = &parsedID
 
 		// Parsing des dates
 		e.CreatedAt, _ = time.Parse("20060102T150405Z", createdAt)
@@ -71,4 +80,50 @@ func GetAgendaById(id uuid.UUID) (*models.Agenda, error) {
 		return nil, err
 	}
 	return &agenda, err
+}
+
+func PostAgenda(newAgenda *models.Agenda) (*models.Agenda, error) {
+	db, err := helpers.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.Exec("INSERT INTO agenda (id, group_id,calendar_id,created_at,updated_at) VALUES (?, ?,?,?,?)",
+		newAgenda.Id.String(), newAgenda.GroupID, newAgenda.CalendarID, newAgenda.CreatedAt, newAgenda.UpdatedAt)
+	helpers.CloseDB(db)
+
+	if err != nil {
+		log.Println("DB QUERY ERROR:", err)
+		return nil, err
+	}
+	return nil, nil
+}
+
+func PutAgendaById(updatedAgenda *models.Agenda) (*models.Agenda, error) {
+	return nil, nil
+	/*db, err := helpers.OpenDB()
+		if err != nil {
+			return nil, err
+		}
+		_, err = db.Exec("UPDATE agenda SET groupId = ?, calendarId = ?, createdAt = ?, updatedAt WHERE id = ?",
+	    updatedAgenda.GroupID.String(),
+	    updatedAgenda.Title,
+	    updatedAgenda.Date,
+	    updatedAgenda.Id.String(),
+	)
+		helpers.CloseDB(db)
+
+		return nil, err*/
+}
+
+func DeleteAgendaById(id uuid.UUID) error {
+	db, err := helpers.OpenDB()
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("DELETE FROM agenda WHERE id = ?", id.String())
+	helpers.CloseDB(db)
+
+	return err
 }

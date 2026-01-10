@@ -20,9 +20,9 @@ import (
 // @Router       /users/{id} [get]
 func GetAgenda(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	agendaId, _ := ctx.Value("agendaId").(uuid.UUID) // getting key set in context.go
+	agendaId, _ := ctx.Value("Id").(uuid.UUID) // getting key set in context.go
 
-	user, err := agenda.GetAgendaById(agendaId)
+	agenda, err := agenda.GetAgendaById(agendaId)
 	if err != nil {
 		body, status := helpers.RespondError(err)
 		w.WriteHeader(status)
@@ -33,7 +33,7 @@ func GetAgenda(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	body, _ := json.Marshal(user)
+	body, _ := json.Marshal(agenda)
 	_, _ = w.Write(body)
 	return
 }

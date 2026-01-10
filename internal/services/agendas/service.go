@@ -11,6 +11,7 @@ import (
 )
 
 func GetAllAgendas() ([]models.Agenda, error) {
+
 	agendas, err := repository.GetAllAgendas()
 
 	// Gestion des erreurs
@@ -34,9 +35,33 @@ func GetAgendaById(id uuid.UUID) (*models.Agenda, error) {
 		}
 		logrus.Errorf("error retrieving user %s : %s", id.String(), err.Error())
 		return nil, &models.ErrorGeneric{
-			Message: fmt.Sprintf("Something went wrong while retrieving user %s", id.String()),
+			Message: fmt.Sprintf("Something went wrong while retrieving agenda %s", id.String()),
 		}
 	}
 
 	return user, err
+}
+
+func DeleteAgenda(id uuid.UUID) error {
+	err := repository.DeleteAgendaById(id)
+	return err
+}
+
+func CreateAgenda(newAgenda *models.Agenda) (*models.Agenda, error) {
+
+	agenda, err := repository.PostAgenda(newAgenda)
+	if err != nil {
+		if err.Error() == sql.ErrNoRows.Error() {
+			return nil, &models.ErrorNotFound{
+				Message: "creation impossible",
+			}
+		}
+	}
+
+	return agenda, err
+}
+
+func UpdateAgenda(id uuid.UUID, updatedAgenda *models.Agenda) (*models.Agenda, error) {
+	agenda, err := repository.PutAgendaById(updatedAgenda)
+	return agenda, err
 }
