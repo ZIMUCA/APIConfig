@@ -17,12 +17,7 @@ func GetAllAgendas() ([]models.Agenda, error) {
 	}
 	defer helpers.CloseDB(db)
 
-	rows, err := db.Query(`SELECT 
-		Id, 
-		group_id, 
-		calendar_id, 
-		created_at, 
-		updated_at FROM AGENDA`)
+	rows, err := db.Query(`SELECT id, group_id, calendar_id,created_at,updated_at FROM agenda`)
 
 	if err != nil {
 		return nil, err
@@ -42,17 +37,13 @@ func GetAllAgendas() ([]models.Agenda, error) {
 			&createdAt,
 			&updatedAt,
 		)
+
+		log.Println(idStr)
+
 		if err != nil {
 			return nil, err
 		}
 
-		parsedID, err := uuid.FromString(idStr)
-		if err != nil {
-			return nil, err
-		}
-		e.Id = &parsedID
-
-		// Parsing des dates
 		e.CreatedAt, _ = time.Parse("20060102T150405Z", createdAt)
 		e.UpdatedAt, _ = time.Parse("20060102T150405Z", updatedAt)
 
@@ -71,11 +62,14 @@ func GetAgendaById(id uuid.UUID) (*models.Agenda, error) {
 	if err != nil {
 		return nil, err
 	}
-	row := db.QueryRow("SELECT * FROM agenda WHERE id=?", id.String())
+	log.Println(id.String())
+	log.Println(id)
+
+	row := db.QueryRow("SELECT id, group_id, calendar_id, created_at, updated_at FROM agenda WHERE id=?", id.String())
 	helpers.CloseDB(db)
 
 	var agenda models.Agenda
-	err = row.Scan(&agenda.Id, &agenda.GroupID)
+	err = row.Scan(&agenda.Id, &agenda.GroupID, &agenda.CalendarID, &agenda.CreatedAt, &agenda.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}

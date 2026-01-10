@@ -20,7 +20,8 @@ import (
 // @Router       /users/{id} [get]
 func GetAgenda(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	agendaId, _ := ctx.Value("Id").(uuid.UUID) // getting key set in context.go
+
+	agendaId, _ := ctx.Value("id").(uuid.UUID) // getting key set in context.go
 
 	agenda, err := agenda.GetAgendaById(agendaId)
 	if err != nil {
