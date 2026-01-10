@@ -1,7 +1,7 @@
 import requests
 import uuid
 
-URL = "http://localhost:8080/agendas"
+URL = "http://localhost:8081/agendas"
 
 data = [
     ("13295", "M1 Groupe 1 langue"),
