@@ -20,7 +20,7 @@ import (
 // @Router       /agendas/{id} [delete]
 func DeleteAgenda(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	agendaId, ok := ctx.Value("Id").(uuid.UUID)
+	agendaId, ok := ctx.Value("id").(uuid.UUID)
 	if !ok {
 		body, status := helpers.RespondError(fmt.Errorf("Invalid user ID"))
 		w.WriteHeader(status)

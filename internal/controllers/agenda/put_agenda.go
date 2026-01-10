@@ -24,7 +24,7 @@ import (
 // @Router       /agendas/{id} [put]
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	userId, ok := ctx.Value("Id").(uuid.UUID)
+	userId, ok := ctx.Value("id").(uuid.UUID)
 	if !ok {
 		body, status := helpers.RespondError(fmt.Errorf("Invalid user ID"))
 		w.WriteHeader(status)
@@ -54,7 +54,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Réponse HTTP 200 OK avec l'utilisateur mis à jour
 	w.WriteHeader(http.StatusOK)
 	body, _ := json.Marshal(updatedAgenda)
 	_, _ = w.Write(body)
