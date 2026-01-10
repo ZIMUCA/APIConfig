@@ -1,5 +1,5 @@
 ---
-subject: EDU Middleware - évènement modifié
+subject: EDU Middleware - modification d’un évènement
 ---
 <!DOCTYPE html>
 <html lang="fr">
@@ -39,32 +39,58 @@ subject: EDU Middleware - évènement modifié
             font-size: 12px;
             color: #888888;
         }
+        .highlight {
+            background-color: #f2f2f2;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 16px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Évènement modifié</h1>
+        <h1>Modification d’un évènement</h1>
 
         <p>Bonjour,</p>
 
         <p>
-            L'évènement <strong>{{ .EventName }}</strong> a été modifié.
+            Nous vous informons que l’évènement lié à l’agenda
+            <strong>{{ .Summary }}</strong>
+            a été modifié.
         </p>
 
-        <p>Voici le détail des changements :</p>
+        <div class="highlight">
+            <p><strong>Champs modifiés :</strong></p>
+            <ul>
+                {{ range .ChangedFields }}
+                <li>{{ . }}</li>
+                {{ end }}
+            </ul>
+        </div>
 
+        <p><strong>Ancienne période :</strong></p>
         <ul>
-            <li><strong>Ancienne date :</strong> {{ .OldDate }}</li>
-            <li><strong>Nouvelle date :</strong> {{ .NewDate }}</li>
-            <li><strong>Nouvelle salle :</strong> {{ .Room }}</li>
+            <li>Début : {{ .OldDtStart }}</li>
+            <li>Fin : {{ .OldDtEnd }}</li>
         </ul>
+
+        <p><strong>Nouvelle période :</strong></p>
+        <ul>
+            <li>Début : {{ .NewDtStart }}</li>
+            <li>Fin : {{ .NewDtEnd }}</li>
+        </ul>
+
+        {{ if .Description }}
+        <p><strong>Description :</strong></p>
+        <p>{{ .Description }}</p>
+        {{ end }}
 
         <p>
             Merci de prendre en compte ces modifications.
         </p>
 
         <p class="footer">
-            Cordialement,<br>
+            Message automatique – merci de ne pas répondre.<br>
             <strong>EDU Middleware</strong>
         </p>
     </div>

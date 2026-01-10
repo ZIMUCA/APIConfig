@@ -3,10 +3,15 @@ package services
 import (
 	"bytes"
 	"encoding/json"
-	"middleware/example/internal/helpers"
+	"fmt"
 	"net/http"
 	"os"
+
+	"middleware/example/internal/helpers"
+	"middleware/example/internal/models"
 )
+
+var MAIL_API_TOKEN = "AABuyqRBSemauCjvJZBAEvgGvbwbVVwoSGLhiSxq"
 
 type MailRequest struct {
 	To      string `json:"to"`
@@ -14,31 +19,38 @@ type MailRequest struct {
 	HTML    string `json:"html"`
 }
 
-func SendAlertMail(alert Alert, event interface{}) error {
+func SendAlertMail(mail string, alert models.Alert) error {
 
+	// Génération du contenu HTML + subject depuis le template
 	html, matter, err := helpers.GetStringFromEmbeddedTemplate(
 		"templates/event_changed.html",
-		event,
+		alert,
 	)
 	if err != nil {
 		return err
 	}
 
 	reqBody := MailRequest{
-		To:      alert.Email,
+		To:      mail,
 		Subject: matter.Subject,
 		HTML:    html,
 	}
 
-	data, _ := json.Marshal(reqBody)
+	data, err := json.Marshal(reqBody)
+	if err != nil {
+		return err
+	}
 
-	req, _ := http.NewRequest(
+	req, err := http.NewRequest(
 		"POST",
 		"https://mail.edu.forestier.re/api/send",
 		bytes.NewBuffer(data),
 	)
+	if err != nil {
+		return err
+	}
 
-	req.Header.Set("Authorization", "Bearer "+os.Getenv("MAIL_API_TOKEN"))
+	req.Header.Set("Authorization", "Bearer "+os.Getenv(MAIL_API_TOKEN))
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -47,6 +59,11 @@ func SendAlertMail(alert Alert, event interface{}) error {
 		return err
 	}
 	defer resp.Body.Close()
+
+	// Vérification du statut HTTP
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("mail API returned status %d", resp.StatusCode)
+	}
 
 	return nil
 }

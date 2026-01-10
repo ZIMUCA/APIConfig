@@ -1,16 +1,29 @@
 ---
-subject: EDU Middleware - évènement modifié
+subject: EDU Middleware - modification d’un évènement
 ---
 Bonjour,
 
-L'évènement "{{ .EventName }}" a été modifié.
+Nous vous informons que l’évènement lié à l’agenda "{{ .Summary }}" a été modifié.
 
-Voici le détail des changements :
-- Ancienne date : {{ .OldDate }}
-- Nouvelle date : {{ .NewDate }}
-- Nouvelle salle : {{ .Room }}
+Champs modifiés :
+{{ range .ChangedFields }}- {{ . }}
+{{ end }}
+
+Ancienne période :
+- Début : {{ .OldDtStart }}
+- Fin   : {{ .OldDtEnd }}
+
+Nouvelle période :
+- Début : {{ .NewDtStart }}
+- Fin   : {{ .NewDtEnd }}
+
+{{ if .Description }}
+Description :
+{{ .Description }}
+{{ end }}
 
 Merci de prendre en compte ces modifications.
 
-Cordialement,
+---
+Message automatique – merci de ne pas répondre.
 EDU Middleware

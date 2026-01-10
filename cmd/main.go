@@ -1,11 +1,11 @@
 package main
 
 import (
-	"net/http"
 	consumers "middleware/example/internal/consumers"
 	"middleware/example/internal/controllers"
 	"middleware/example/internal/controllers/agenda"
 	"middleware/example/internal/controllers/alerts"
+	"net/http"
 
 	"middleware/example/internal/helpers"
 
@@ -25,11 +25,12 @@ func main() {
 	go func() {
 		consumer, err := consumers.AlerterConsumer()
 		if err != nil {
-			logrus.Fatalf("error creating alerter consumer: %v", err)
+			logrus.Errorf("error creating alerter consumer: %v", err)
+			return
 		}
 
 		if err := consumers.ConsumeAlerter(*consumer); err != nil {
-			logrus.Fatalf("error consuming alerts: %v", err)
+			logrus.Errorf("error consuming alerts: %v", err)
 		}
 	}()
 
@@ -71,18 +72,17 @@ func init() {
 			id TEXT PRIMARY KEY NOT NULL UNIQUE,
 			agenda_id INTEGER,
 			name TEXT
-		);
-		CREATE TABLE IF NOT EXISTS alert (
+		);`,
+		`CREATE TABLE IF NOT EXISTS alerts (
 			id TEXT PRIMARY KEY NOT NULL UNIQUE,
 			agenda_id INTEGER,
 			mail TEXT
 		);`,
-		
 	}
 
 	for _, scheme := range schemes {
 		if _, err := db.Exec(scheme); err != nil {
-			logrus.Fatalln("Could not generate table agenda! Error was: " + err.Error())
+			logrus.Fatalf("Could not generate table! Error was: %s", err.Error())
 		}
 	}
 

@@ -27,15 +27,15 @@ func ConsumeAlerter(consumer jetstream.Consumer) error {
 			alert.ChangedFields,
 		)
 
-		alerts, err := services.GetAlertsForEvent(alert.UID)
+		mails, err := services.GetMailsForAlert(alert)
 		if err != nil {
-			logrus.Errorf("cannot get alerts: %v", err)
+			logrus.Errorf("cannot resolve alert recipients: %v", err)
 			_ = msg.Nak()
 			return
 		}
 
-		for _, a := range alerts {
-			if err := services.SendAlertMail(a, alert); err != nil {
+		for _, mail := range mails {
+			if err := services.SendAlertMail(mail, alert); err != nil {
 				logrus.Errorf("mail error: %v", err)
 			}
 		}
