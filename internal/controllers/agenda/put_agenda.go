@@ -11,7 +11,7 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-// UpdateUser
+// UpdateAgenda
 // @Tags         agendas
 // @Summary      Update an genda.
 // @Description  Update an agenda by UUID.

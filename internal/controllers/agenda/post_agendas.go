@@ -14,8 +14,8 @@ import (
 // @Description  Create a new agenda.
 // @Accept       json
 // @Produce      json
-// @Param        agenda      body      models.Agenda  true  "Agenda data"
-// @Success      201       {object}  models.Agenda
+// @Param        agenda      body      agendas.Agenda  true  "Agenda data"
+// @Success      201       {object}  agendas.Agenda
 // @Failure      400       "Invalid request body"
 // @Failure      500       "Something went wrong"
 // @Router       /agendas [post]

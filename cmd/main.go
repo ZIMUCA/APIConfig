@@ -14,13 +14,13 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Route("/agendas", func(r chi.Router) { // route /agendas
-		r.Get("/", agenda.GetAgendas) // GET /agendas
-		r.Post("/", agenda.PostAgenda)
+		r.Get("/", agenda.GetAgendas)         // GET /agendas
+		r.Post("/", agenda.PostAgenda)        // POST /agendas
 		r.Route("/{id}", func(r chi.Router) { // route /agendas/{id}
-			r.Use(agenda.Context)        // Use Context method to get agenda ID
-			r.Get("/", agenda.GetAgenda) // GET /agendas/{id}
-			r.Delete("/", agenda.DeleteAgenda)
-			r.Put("/", agenda.UpdateAgenda)
+			r.Use(agenda.Context)              // Use Context method to get agenda ID
+			r.Get("/", agenda.GetAgenda)       // GET /agendas/{id}
+			r.Delete("/", agenda.DeleteAgenda) // DELETE /agendas/{id}
+			r.Put("/", agenda.UpdateAgenda)    //PUT /agendas/{id}
 		})
 	})
 
