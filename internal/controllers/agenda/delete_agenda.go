@@ -9,11 +9,11 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-// DeleteUser
+// DeleteAgenda
 // @Tags         agendas
 // @Summary      Delete an agenda.
 // @Description  Delete an agenda by UUID.
-// @Param        id   path      string  true  "User UUID formatted ID"
+// @Param        id   path      string  true  "Agenda UUID formatted ID"
 // @Success      204  "No content"
 // @Failure      422  "Cannot parse id"
 // @Failure      500  "Something went wrong"
@@ -22,7 +22,7 @@ func DeleteAgenda(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	agendaId, ok := ctx.Value("id").(uuid.UUID)
 	if !ok {
-		body, status := helpers.RespondError(fmt.Errorf("Invalid user ID"))
+		body, status := helpers.RespondError(fmt.Errorf("Invalid agenda ID"))
 		w.WriteHeader(status)
 		if body != nil {
 			_, _ = w.Write(body)

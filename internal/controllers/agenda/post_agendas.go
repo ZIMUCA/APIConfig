@@ -18,8 +18,8 @@ import (
 // @Success      201       {object}  agendas.Agenda
 // @Failure      400       "Invalid request body"
 // @Failure      500       "Something went wrong"
-// @Router       /users [post]
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+// @Router       /agendas [post]
+func PostAgenda(w http.ResponseWriter, r *http.Request) {
 
 	var newAgenda models.Agenda
 	if err := json.NewDecoder(r.Body).Decode(&newAgenda); err != nil {

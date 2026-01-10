@@ -8,12 +8,12 @@ import (
 )
 
 // GetAgendas
-// @Tags         users
-// @Summary      Get all users.
-// @Description  Get all users.
-// @Success      200            {array}  models.User
+// @Tags         agendas
+// @Summary      Get all agendas.
+// @Description  Get all agendas.
+// @Success      200            {array}  models.Agenda
 // @Failure      500             "Something went wrong"
-// @Router       /users [get]
+// @Router       /agendas [get]
 func GetAgendas(w http.ResponseWriter, _ *http.Request) {
 	// calling service
 	agendas, err := agenda.GetAllAgendas()

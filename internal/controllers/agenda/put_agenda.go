@@ -22,11 +22,11 @@ import (
 // @Failure      422   "Cannot parse id"
 // @Failure      500   "Something went wrong"
 // @Router       /agendas/{id} [put]
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
+func UpdateAgenda(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	userId, ok := ctx.Value("id").(uuid.UUID)
+	agendaId, ok := ctx.Value("id").(uuid.UUID)
 	if !ok {
-		body, status := helpers.RespondError(fmt.Errorf("Invalid user ID"))
+		body, status := helpers.RespondError(fmt.Errorf("Invalid agenda ID"))
 		w.WriteHeader(status)
 		if body != nil {
 			_, _ = w.Write(body)
@@ -44,7 +44,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updatedAgenda, err := agenda.UpdateAgenda(userId, &updatedData)
+	updatedAgenda, err := agenda.UpdateAgenda(agendaId, &updatedData)
 	if err != nil {
 		body, status := helpers.RespondError(err)
 		w.WriteHeader(status)
