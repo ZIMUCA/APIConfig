@@ -1,10 +1,9 @@
 package alerts
 
 import (
-	/*"encoding/json"
+	"encoding/json"
 	"middleware/example/internal/helpers"
-	"middleware/example/internal/models"
-	 alert "middleware/example/internal/services/alerts"*/
+	alert "middleware/example/internal/services/alerts"
 	"net/http"
 )
 
@@ -16,7 +15,8 @@ import (
 // @Failure      500             "Something went wrong"
 // @Router       /alerts [get]
 func GetAlerts(w http.ResponseWriter, _ *http.Request) {
-	/*alerts, err := alert.getAllAlerts()
+
+	alerts, err := alert.GetAllAlerts()
 	if err != nil {
 		body, status := helpers.RespondError(err)
 		w.WriteHeader(status)
@@ -29,5 +29,5 @@ func GetAlerts(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	body, _ := json.Marshal(alerts)
 	_, _ = w.Write(body)
-	return*/
+	return
 }

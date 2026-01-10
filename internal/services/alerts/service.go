@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func getAllAlerts() ([]models.Alerts, error) {
+func GetAllAlerts() ([]models.Alerts, error) {
 
 	alerts, err := repository.GetAllAlerts()
 
@@ -38,7 +38,7 @@ func CreateAlerts(newAlert *models.Alerts) (*models.Alerts, error) {
 	return alert, err
 }
 
-func UpdateAgenda(id uuid.UUID, updatedAlert *models.Alerts) (*models.Alerts, error) {
+func UpdateAlert(id uuid.UUID, updatedAlert *models.Alerts) (*models.Alerts, error) {
 	alert, err := repository.PutAlertById(id, updatedAlert)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {

@@ -11,17 +11,17 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-// UpdateAgenda
-// @Tags         agendas
-// @Summary      Update an genda.
-// @Description  Update an agenda by UUID.
-// @Param        id    path      string      true  "Agenda UUID formatted ID"
-// @Param        agenda  body      models.Agenda  true  "Updated agenda data"
-// @Success      200   {object}  models.Agenda
+// UpdateAlert
+// @Tags         alerts
+// @Summary      Update an alert.
+// @Description  Update an alert by UUID.
+// @Param        id    path      string      true  "Alert UUID formatted ID"
+// @Param        alert  body      models.Alerts  true  "Updated alert data"
+// @Success      200   {object}  models.Alerts
 // @Failure      400   "Invalid request body"
 // @Failure      422   "Cannot parse id"
 // @Failure      500   "Something went wrong"
-// @Router       /agendas/{id} [put]
+// @Router       /alerts/{id} [put]
 func UpdateAlert(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	alertId, ok := ctx.Value("id").(uuid.UUID)
@@ -44,7 +44,7 @@ func UpdateAlert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updatedAlert, err := alert.UpdateAgenda(alertId, &updatedData)
+	updatedAlert, err := alert.UpdateAlert(alertId, &updatedData)
 	if err != nil {
 		body, status := helpers.RespondError(err)
 		w.WriteHeader(status)
