@@ -9,6 +9,7 @@ import (
 	"github.com/adrg/frontmatter"
 )
 
+//go:embed config/*
 var embeddedTemplates embed.FS
 
 type MailMatter struct {

@@ -26,3 +26,26 @@ for agenda_id, name in data:
     }
 
     response = requests.post(URL, json=payload, headers=headers)
+
+URL = "http://localhost:8081/alerts"
+
+dataAlerts = [
+    ("13295", "Maxime.VIMPERE@etu.uca.fr"),
+    ("13345", "Maxime.VIMPERE@etu.uca.fr"),
+    ("13397", "Maxime.VIMPERE@etu.uca.fr"),
+    ("7224",  "Maxime.VIMPERE@etu.uca.fr"),
+    ("7225",  "Maxime.VIMPERE@etu.uca.fr"),
+    ("62962", "Maxime.VIMPERE@etu.uca.fr"),
+    ("62090", "Maxime.VIMPERE@etu.uca.fr"),
+    ("56529", "Maxime.VIMPERE@etu.uca.fr"),
+]
+
+
+for agenda_id, mail in dataAlerts:
+    payload = {
+        "id": str(uuid.uuid4()),
+        "agenda_id": agenda_id,
+        "mail": mail
+    }
+
+    response = requests.post(URL, json=payload, headers=headers)

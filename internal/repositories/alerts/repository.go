@@ -54,7 +54,7 @@ func PostAlert(newAlert *models.Alerts) (*models.Alerts, error) {
 		return nil, err
 	}
 
-	_, err = db.Exec("INSERT INTO alert (id, agenda_id,mail) VALUES (?, ?,?)",
+	_, err = db.Exec("INSERT INTO alerts (id, agenda_id,mail) VALUES (?, ?,?)",
 		newAlert.Id.String(), newAlert.AgendaId, newAlert.Mail)
 	helpers.CloseDB(db)
 

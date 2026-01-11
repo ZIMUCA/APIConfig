@@ -5,25 +5,24 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 
 	"middleware/example/internal/helpers"
 	"middleware/example/internal/models"
+
+	"github.com/sirupsen/logrus"
 )
 
 var MAIL_API_TOKEN = "AABuyqRBSemauCjvJZBAEvgGvbwbVVwoSGLhiSxq"
 
 type MailRequest struct {
-	To      string `json:"to"`
-	Subject string `json:"subject"`
-	HTML    string `json:"html"`
+	Recipient string `json:"recipient"`
+	Subject   string `json:"subject"`
+	Content   string `json:"content"`
 }
 
 func SendAlertMail(mail string, alert models.Alert) error {
-
-	// Génération du contenu HTML + subject depuis le template
 	html, matter, err := helpers.GetStringFromEmbeddedTemplate(
-		"templates/event_changed.html",
+		"config/event_changed.html",
 		alert,
 	)
 	if err != nil {
@@ -31,9 +30,9 @@ func SendAlertMail(mail string, alert models.Alert) error {
 	}
 
 	reqBody := MailRequest{
-		To:      mail,
-		Subject: matter.Subject,
-		HTML:    html,
+		Recipient: mail,
+		Subject:   matter.Subject,
+		Content:   html,
 	}
 
 	data, err := json.Marshal(reqBody)
@@ -43,14 +42,14 @@ func SendAlertMail(mail string, alert models.Alert) error {
 
 	req, err := http.NewRequest(
 		"POST",
-		"https://mail.edu.forestier.re/api/send",
+		"https://mail-api.edu.forestier.re/mail",
 		bytes.NewBuffer(data),
 	)
 	if err != nil {
 		return err
 	}
 
-	req.Header.Set("Authorization", "Bearer "+os.Getenv(MAIL_API_TOKEN))
+	req.Header.Set("Authorization", MAIL_API_TOKEN)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -60,10 +59,10 @@ func SendAlertMail(mail string, alert models.Alert) error {
 	}
 	defer resp.Body.Close()
 
-	// Vérification du statut HTTP
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return fmt.Errorf("mail API returned status %d", resp.StatusCode)
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("mail API returned %d", resp.StatusCode)
 	}
 
+	logrus.Infof("Mail envoyé avec succès à %s", mail)
 	return nil
 }
